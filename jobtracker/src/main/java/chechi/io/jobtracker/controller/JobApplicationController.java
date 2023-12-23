@@ -40,6 +40,7 @@ public class JobApplicationController {
 
     @DeleteMapping("/{jobId}")
     public ResponseEntity<Void> deleteJobApplication (@PathVariable Integer jobId) {
+        jobApplicationService.deleteJobApplication(jobId);
         return ResponseEntity.noContent().build();
     }
 }

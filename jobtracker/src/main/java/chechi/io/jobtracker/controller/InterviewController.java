@@ -40,6 +40,7 @@ public class InterviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInterview (@PathVariable Integer id) {
+        interviewService.deleteInterview(id);
         return ResponseEntity.noContent().build();
     }
 
