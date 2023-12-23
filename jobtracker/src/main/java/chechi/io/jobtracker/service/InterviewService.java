@@ -15,6 +15,6 @@ public interface InterviewService {
 
     InterviewResponse updateInterview (Integer id, InterviewRequest request);
 
-    void deleteInterview (Integer id);
+    void deleteInterview (Integer jobId, Integer id);
 
 }

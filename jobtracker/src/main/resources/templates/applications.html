@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Job Application Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="row mt-4">
+    <!-- Status divs for pending, in review, rejected, accepted -->
+    <!-- Display job applications with status 'Pending' here -->
+    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h4>Pending</h4>
+
+        <div th:each="job : ${pendingJobs}">
+            <div>
+                <p>
+                    <a href="#" th:text="${job.companyName}"
+                       th:onclick="'populateModal(' + ${job.id} + ')'"
+                       data-toggle="modal"
+                       data-target="#jobApplicationModal"
+                       class="job-details-link">
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h4>In Review</h4>
+        <!-- Display job applications with status 'In Review' here -->
+    </div>
+
+    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h4>Rejected</h4>
+        <!-- Display job applications with status 'Rejected' here -->
+    </div>
+
+    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h4>Accepted</h4>
+        <!-- Display job applications with status 'Accepted' here -->
+    </div>
+</div>
+
+<!-- Check if updatedJob exists in the model -->
+<div th:if="${updatedJob}" class="alert alert-success">
+    <p th:text="'Job updated for ' + ${updatedJob.companyName}"></p>
+</div>
+
+
+<!-- Modal for Job Application Details -->
+<div class="modal fade" id="jobApplicationModal" tabindex="-1" role="dialog" aria-labelledby="jobApplicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobApplicationModalLabel">Job Application Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/job-applications/update/{id}(id=${jobApplication.id})}" th:object="${jobApplication}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <input type="hidden" name="_method" value="put" />
+
+                    <!-- Company Name -->
+                    <div class="form-group">
+                        <label for="companyName">Company Name:</label>
+                        <input type="text" class="form-control" id="companyName" th:field="*{companyName}" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" th:field="*{email}">
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="tel" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" required>
+                    </div>
+
+                    <!-- Job Description -->
+                    <div class="form-group">
+                        <label for="jobDescription">Job Description:</label>
+                        <textarea class="form-control" id="jobDescription" th:field="*{jobDescription}" rows="3"></textarea>
+                    </div>
+
+                    <!-- Position Applied -->
+                    <div class="form-group">
+                        <label for="positionApplied">Position Applied:</label>
+                        <input type="text" class="form-control" id="positionApplied" th:field="*{positionApplied}" required>
+                    </div>
+
+                    <!-- Applied At -->
+                    <div class="form-group">
+                        <label for="appliedAt">Applied At:</label>
+                        <input type="date" class="form-control" id="appliedAt" th:field="*{appliedAt}">
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label for="notes">Notes:</label>
+                        <textarea class="form-control" id="notes" th:field="*{notes}" rows="3"></textarea>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select class="form-control" id="status" th:field="*{status}">
+                            <option value="PENDING">Pending</option>
+                            <option value="IN_REVIEW">In Review</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="ACCEPTED">Accepted</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Update Application</button>
+
+                    <!-- Success Message -->
+                    <div class="form-group">
+                        <div th:if="${showSuccess}" class="alert alert-success" style="margin-top: 20px;">
+                            Job Application is updated successfully. Move to <a th:href="@{/job-applications}">application list</a>.
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Your existing JavaScript and other HTML code -->
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<<script th:inline="javascript">
+    // JavaScript code for drag and drop functionality
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedElement = document.getElementById(data);
+        var clone = draggedElement.cloneNode(true);
+        clone.id = "newId"; // You may want to assign a unique ID
+        ev.target.appendChild(clone);
+
+        // Add logic to update the status of the job application in your backend
+        // You may need to make an AJAX request to update the status
+    }
+
+    // JavaScript code to open the modal when clicking on job details links
+    function populateModal(jobId) {
+        // Fetch job details using Thymeleaf/Java endpoint
+        fetch('/job-applications/job-details/' + jobId)
+            .then(response => response.json())
+            .then(data => {
+                // Populate modal fields with fetched data
+                document.getElementById('companyName').value = data.companyName || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('phoneNumber').value = data.phoneNumber || '';
+                document.getElementById('jobDescription').value = data.jobDescription || '';
+                document.getElementById('positionApplied').value = data.positionApplied || '';
+                document.getElementById('appliedAt').value = data.appliedAt || '';
+                document.getElementById('notes').value = data.notes || '';
+                document.getElementById('status').value = data.status || '';
+                // Populate other fields similarly
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+</script>
+
+
+
+
+</body>
+</html>

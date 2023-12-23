@@ -1,5 +1,6 @@
 package chechi.io.jobtracker.dto.application;
 
+import chechi.io.jobtracker.dto.interview.InterviewResponse;
 import chechi.io.jobtracker.entity.StatusType;
 import chechi.io.jobtracker.entity.Interview;
 import lombok.*;
@@ -29,9 +30,8 @@ public class JobApplicationResponse {
 
     private String notes;
 
-
+    private InterviewResponse lastInterview;
 
     private StatusType status;
 
-    //private Interview currentInterview;
 }

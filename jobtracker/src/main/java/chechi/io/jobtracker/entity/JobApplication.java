@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "job_applications")
@@ -41,14 +43,14 @@ public class JobApplication {
 
     private String notes;
 
-
-
     @Enumerated(EnumType.STRING)
     private StatusType status;
 
-    //@OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL)
-    //private List<Interview> interviews = new ArrayList<>();
+    @OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL)
+    private List<Interview> interviews = new ArrayList<>();
 
-    //private Interview lastInterview;
+    @OneToOne
+    @JoinColumn(name = "last_interview_id")
+    private Interview lastInterview;
 
 }

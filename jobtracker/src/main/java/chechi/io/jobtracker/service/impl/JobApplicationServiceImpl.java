@@ -45,8 +45,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     public JobApplicationResponse updateJobApplication(Integer id, JobApplicationRequest request) {
         JobApplication app = jobApplicationRepository.findById(id).orElseThrow(() -> new JobApplicationNotFound("Job application not found"));
 
-
-
         app.setCompanyName(request.getCompanyName());
         app.setEmail(request.getEmail());
         app.setPhoneNumber(request.getPhoneNumber());
@@ -55,7 +53,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         app.setAppliedAt(request.getAppliedAt());
         app.setNotes(request.getNotes());
         app.setStatus(request.getStatus());
-
 
 /*
         if (app.isInterview()) {

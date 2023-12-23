@@ -1,4 +1,4 @@
-package chechi.io.jobtracker.controller;
+package chechi.io.jobtracker.controller.api;
 
 import chechi.io.jobtracker.dto.application.JobApplicationRequest;
 import chechi.io.jobtracker.dto.application.JobApplicationResponse;
@@ -6,6 +6,7 @@ import chechi.io.jobtracker.service.JobApplicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class JobApplicationController {
         return ResponseEntity.status(HttpStatus.OK).body(jobApplicationService.findById(jobId));
     }
 
-    @PostMapping
+    @PostMapping // (consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<JobApplicationResponse> createJobApplication (@RequestBody @Valid JobApplicationRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(jobApplicationService.createJobApplication(request));
     }

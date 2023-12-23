@@ -2,6 +2,8 @@ package chechi.io.jobtracker.converter;
 
 import chechi.io.jobtracker.dto.application.JobApplicationRequest;
 import chechi.io.jobtracker.dto.application.JobApplicationResponse;
+import chechi.io.jobtracker.dto.interview.InterviewResponse;
+import chechi.io.jobtracker.entity.Interview;
 import chechi.io.jobtracker.entity.JobApplication;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,19 @@ public class JobApplicationConverter {
 
     public JobApplicationResponse toResponse (JobApplication jobApplication) {
 
+        Interview lastInterview = jobApplication.getLastInterview();
+        InterviewResponse interviewResponse = null;
+
+        if (lastInterview != null) {
+            interviewResponse = InterviewResponse.builder()
+                    .id(lastInterview.getId())
+                    .interviewDate(lastInterview.getInterviewDate())
+                    .location(lastInterview.getLocation())
+                    .details(lastInterview.getDetails())
+                    .notes(lastInterview.getNotes())
+                    .build();
+        }
+
         return JobApplicationResponse.builder()
                 .id(jobApplication.getId())
                 .companyName(jobApplication.getCompanyName())
@@ -36,9 +51,8 @@ public class JobApplicationConverter {
                 .positionApplied(jobApplication.getPositionApplied())
                 .appliedAt(jobApplication.getAppliedAt())
                 .notes(jobApplication.getNotes())
-
                 .status(jobApplication.getStatus())
-                //interview last from list by date
+                .lastInterview(interviewResponse)
                 .build();
     }
 }

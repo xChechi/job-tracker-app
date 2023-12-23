@@ -1,4 +1,4 @@
-package chechi.io.jobtracker.controller;
+package chechi.io.jobtracker.controller.api;
 
 import chechi.io.jobtracker.dto.interview.InterviewRequest;
 import chechi.io.jobtracker.dto.interview.InterviewResponse;
@@ -38,9 +38,9 @@ public class InterviewController {
         return ResponseEntity.status(HttpStatus.OK).body(interviewService.updateInterview(id, request));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInterview (@PathVariable Integer id) {
-        interviewService.deleteInterview(id);
+    @DeleteMapping("/{jobId}/{id}")
+    public ResponseEntity<Void> deleteInterview (@PathVariable Integer jobId, @PathVariable Integer id) {
+        interviewService.deleteInterview(jobId, id);
         return ResponseEntity.noContent().build();
     }
 
