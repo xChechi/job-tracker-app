@@ -1,0 +1,66 @@
+
+body {
+    font-family: 'Font Awesome 5 Free', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    weight: 90%;
+    /* Other global styles */
+}
+
+/* Styles for the header */
+header {
+    background-color: #333; /* Background color */
+    color: #fff; /* Text color */
+    padding: 20px; /* Padding for the header */
+    text-align: center; /* Center align text */
+}
+
+h1 {
+    margin: 0; /* Remove default margin for h1 */
+    font-size: 24px; /* Font size */
+}
+
+.main-content {
+    width: 90%;
+    margin: 20px auto;
+    /* Other styles for your main content */
+}
+
+
+/* Styles for the job details card */
+.job-details-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Adding transition */
+}
+
+.job-details-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+    background-color: #f9f9f9; /* Change background color on hover */
+}
+
+.job-details-content {
+    /* Other styles for the content inside the card */
+}
+
+
+.company-name {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+
+    /* Add other styles as needed */
+}
+
+.title {
+    text-align: center;
+}
+
+.delete-button {
+    width: 180px;
+}

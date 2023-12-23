@@ -5,46 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Job Application Tracker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Favicon -->
+    <link th:href="@{/img/favicon.ico}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link th:href="@{https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 
 <body>
-<div class="row mt-4">
-    <!-- Status divs for pending, in review, rejected, accepted -->
-    <!-- Display job applications with status 'Pending' here -->
-    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4>Pending</h4>
 
-        <div th:each="job : ${pendingJobs}">
-            <div>
-                <p>
-                    <a href="#" th:text="${job.companyName}"
-                       th:onclick="'populateModal(' + ${job.id} + ')'"
-                       data-toggle="modal"
-                       data-target="#jobApplicationModal"
-                       class="job-details-link">
-                    </a>
-                </p>
+<header>
+    <h1>Andanela's Dream Job Search Management</h1>
+</header>
+
+<main class="main-content">
+<!-- Status divs for pending, in review, rejected, accepted -->
+<div class="row mt-4">
+    <!-- Display job applications with different statuses -->
+    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h4 class="title">Pending</h4>
+
+        <div th:each="job : ${pendingJobs}" class="job-details">
+            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                 data-toggle="modal"
+                 data-target="#jobApplicationModal">
+                <div class="job-details-content">
+                    <h5 th:text="${job.companyName}" class="company-name"></h5>
+                    <!-- You can add other job details here if needed -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h4 class="title">In Review</h4>
+        <div th:each="job : ${inReviewJobs}" class="job-details">
+            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                 data-toggle="modal"
+                 data-target="#jobApplicationModal">
+                <div class="job-details-content">
+                    <h5 th:text="${job.companyName}" class="company-name"></h5>
+                    <!-- You can add other job details here if needed -->
+                </div>
             </div>
         </div>
     </div>
 
-
-
     <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4>In Review</h4>
-        <!-- Display job applications with status 'In Review' here -->
+        <h4 class="title">Rejected</h4>
+        <div th:each="job : ${rejectedJobs}" class="job-details">
+            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                 data-toggle="modal"
+                 data-target="#jobApplicationModal">
+                <div class="job-details-content">
+                    <h5 th:text="${job.companyName}" class="company-name"></h5>
+                    <!-- You can add other job details here if needed -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4>Rejected</h4>
-        <!-- Display job applications with status 'Rejected' here -->
-    </div>
-
-    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4>Accepted</h4>
-        <!-- Display job applications with status 'Accepted' here -->
+        <h4 class="title">Accepted</h4>
+        <div th:each="job : ${acceptedJobs}" class="job-details">
+            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                 data-toggle="modal"
+                 data-target="#jobApplicationModal">
+                <div class="job-details-content">
+                    <h5 th:text="${job.companyName}" class="company-name"></h5>
+                    <!-- You can add other job details here if needed -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+</main>
 
 <!-- Check if updatedJob exists in the model -->
 <div th:if="${updatedJob}" class="alert alert-success">
@@ -63,7 +105,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/job-applications/update/{id}(id=${jobApplication.id})}" th:object="${jobApplication}" method="post">
+                <form id="jobApplicationForm" th:action="@{/job-applications/update/{id}(id=${jobApplication.id})}" th:object="${jobApplication}" method="post">
                     <input type="hidden" th:field="*{id}" />
                     <input type="hidden" name="_method" value="put" />
 
@@ -120,12 +162,18 @@
                         </select>
                     </div>
 
+                    <div class="form-group d-flex justify-content-between mt-3">
                     <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary">Update Application</button>
 
+                        <button type="submit" class="btn btn-primary">Update Application</button>
+                        <!-- Inside your delete button -->
+                        <button type="button" class="btn btn-danger delete-button" th:onclick=confirmAndDeleteJob()>Delete</button>
+
+
+                    </div>
                     <!-- Success Message -->
                     <div class="form-group">
-                        <div th:if="${showSuccess}" class="alert alert-success" style="margin-top: 20px;">
+                        <div id="successMessage" class="alert alert-success" style="margin-top: 20px; display: none;">
                             Job Application is updated successfully. Move to <a th:href="@{/job-applications}">application list</a>.
                         </div>
                     </div>
@@ -133,7 +181,8 @@
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refreshPage()">Close</button>
+
             </div>
         </div>
     </div>
@@ -150,7 +199,12 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<<script th:inline="javascript">
+<script th:inline="javascript">
+
+    function refreshPage() {
+        location.reload(); // Reload the current page
+    }
+
     // JavaScript code for drag and drop functionality
     function allowDrop(ev) {
         ev.preventDefault();
@@ -174,23 +228,105 @@
 
     // JavaScript code to open the modal when clicking on job details links
     function populateModal(jobId) {
-        // Fetch job details using Thymeleaf/Java endpoint
-        fetch('/job-applications/job-details/' + jobId)
-            .then(response => response.json())
-            .then(data => {
-                // Populate modal fields with fetched data
-                document.getElementById('companyName').value = data.companyName || '';
-                document.getElementById('email').value = data.email || '';
-                document.getElementById('phoneNumber').value = data.phoneNumber || '';
-                document.getElementById('jobDescription').value = data.jobDescription || '';
-                document.getElementById('positionApplied').value = data.positionApplied || '';
-                document.getElementById('appliedAt').value = data.appliedAt || '';
-                document.getElementById('notes').value = data.notes || '';
-                document.getElementById('status').value = data.status || '';
-                // Populate other fields similarly
-            })
-            .catch(error => console.error('Error:', error));
+    fetch('/job-applications/job-details/' + jobId)
+        .then(response => response.json())
+        .then(data => {
+            // Populate modal fields with fetched data
+            document.getElementById('companyName').value = data.companyName || '';
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('phoneNumber').value = data.phoneNumber || '';
+            document.getElementById('jobDescription').value = data.jobDescription || '';
+            document.getElementById('positionApplied').value = data.positionApplied || '';
+            document.getElementById('appliedAt').value = data.appliedAt || '';
+            document.getElementById('notes').value = data.notes || '';
+            document.getElementById('status').value = data.status || '';
+
+            // Populate other fields similarly
+
+            // Set the jobId as a data attribute in the form
+            document.getElementById('jobApplicationForm').setAttribute('data-jobId', jobId);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+        // JavaScript code to handle form submission
+
+    // JavaScript code to handle form submission
+document.getElementById('jobApplicationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Fetch form data
+    const form = document.getElementById('jobApplicationForm');
+    const formData = new FormData(form);
+
+    // Retrieve jobId from the form's data attribute
+    const jobId = form.getAttribute('data-jobId');
+
+    // Fetch API endpoint to update job application details
+    fetch('/job-applications/update/' + jobId, {
+        method: 'PUT',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Successful update - populate the modal again with updated data
+            return fetch('/job-applications/job-details/' + jobId);
+        } else {
+            throw new Error('Failed to update'); // Handle the error appropriately
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Populate modal fields with fetched data
+        document.getElementById('companyName').value = data.companyName || '';
+        document.getElementById('email').value = data.email || '';
+        document.getElementById('phoneNumber').value = data.phoneNumber || '';
+        document.getElementById('jobDescription').value = data.jobDescription || '';
+        document.getElementById('positionApplied').value = data.positionApplied || '';
+        document.getElementById('appliedAt').value = data.appliedAt || '';
+        document.getElementById('notes').value = data.notes || '';
+        document.getElementById('status').value = data.status || '';
+        // ... Populate other fields similarly
+
+        // Show success message
+        const successMessage = document.getElementById('successMessage');
+        successMessage.style.display = 'block'; // Show the success message
+
+        // Optionally, close the modal or perform other actions
+        // $('#jobApplicationModal').modal('hide'); // Close the modal using jQuery
+
+    })
+    .catch(error => {
+        // Handle errors or display error messages
+        console.error('Error:', error);
+    });
+});
+
+    function confirmAndDeleteJob(jobId) {
+    if (jobId && confirm('Are you sure you want to delete this job application?')) {
+        fetch('/job-applications/delete-entry/' + jobId, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Job application deleted successfully');
+                // Handle successful deletion here
+                // You may want to update the UI or reload the page
+            } else {
+                console.error('Failed to delete job application');
+                // Handle errors or unsuccessful deletion
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
+}
+
+
+
+
 
 </script>
 
