@@ -50,11 +50,13 @@
             <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
                  data-toggle="modal"
                  data-target="#jobApplicationModal">
-                <div class="job-details-content">
+                <div class="job-details-content d-flex justify-content-between align-items-center">
                     <h5 th:text="${job.companyName}" class="company-name"></h5>
-                    <!-- You can add other job details here if needed -->
+                    <!-- Button aligned to the right -->
+                    <button class="btn btn-primary ml-auto open-interview-modal" onclick="openInterviewModal()">Interview</button>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -179,6 +181,8 @@
                     </div>
                 </form>
             </div>
+
+
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refreshPage()">Close</button>
@@ -187,6 +191,63 @@
         </div>
     </div>
 </div>
+
+<!-- Modal for Interview Details -->
+<div class="modal fade" id="interviewModal" tabindex="-1" role="dialog" aria-labelledby="interviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="interviewModalLabel">Interview Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="interviewForm" th:action="@{/interviews/{jobId}(jobId=${jobId})}" method="post" enctype="multipart/form-data" data-jobId="${jobApplication.id}">
+                    <input type="hidden" id="jobApplicationId" name="jobApplicationId" th:value="${jobApplication.id}" />
+
+
+
+                    <!-- Interview Date -->
+                    <div class="form-group">
+                        <label for="interviewDate">Interview Date:</label>
+                        <input type="datetime-local" class="form-control" id="interviewDate" name="interviewDate" required>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="form-group">
+                        <label for="interviewLocation">Location:</label>
+                        <input type="text" class="form-control" id="interviewLocation" name="location" required>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="form-group">
+                        <label for="interviewDetails">Details:</label>
+                        <textarea class="form-control" id="interviewDetails" name="details" rows="3" required></textarea>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label for="interviewNotes">Notes:</label>
+                        <textarea class="form-control" id="interviewNotes" name="notes" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-between mt-3">
+                        <!-- Submit Button -->
+                        <button id="submitInterviewButton" type="button" class="btn btn-primary" onclick="submitInterview()" >Submit Interview</button>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Your existing JavaScript and other HTML code -->
 
@@ -245,6 +306,10 @@
 
             // Set the jobId as a data attribute in the form
             document.getElementById('jobApplicationForm').setAttribute('data-jobId', jobId);
+
+            // Update the action attribute of the interview form with the jobId
+    const interviewForm = document.getElementById('interviewForm');
+    interviewForm.action = '/interviews/' + jobId; // Update the action URL
         })
         .catch(error => console.error('Error:', error));
 }
@@ -326,7 +391,59 @@ document.getElementById('jobApplicationForm').addEventListener('submit', functio
 
 
 
+function submitInterview() {
+        // Fetch data from the interview form
+        const interviewDate = document.getElementById('interviewDate').value;
+        const interviewLocation = document.getElementById('interviewLocation').value;
+        const interviewDetails = document.getElementById('interviewDetails').value;
+        const interviewNotes = document.getElementById('interviewNotes').value;
 
+        // Retrieve jobId from the form's data attribute
+        const jobId = document.getElementById('jobApplicationForm').getAttribute('data-jobId');
+
+        // Construct an object with interview details
+        const interviewData = {
+            interviewDate: interviewDate,
+            location: interviewLocation,
+            details: interviewDetails,
+            notes: interviewNotes
+            // Add other interview details here according to your entity
+        };
+
+        // Make a POST request to create the interview
+        fetch('/interviews/' + jobId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(interviewData)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle success (e.g., display a success message, update UI, etc.)
+                console.log('Interview submitted successfully');
+            } else {
+                // Handle errors or unsuccessful submission
+                console.error('Failed to submit interview');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+
+    // Event delegation to handle clicks on the job details card
+$('.job-details-card').on('click', function(event) {
+    // Check if the click originated from the interview button
+    if ($(event.target).hasClass('open-interview-modal')) {
+        event.stopPropagation(); // Prevent the default behavior
+        $('#interviewModal').modal('show'); // Open the interview modal
+    } else {
+        // Click was on the job details card, open the application modal
+        $('#jobApplicationModal').modal('show');
+    }
+});
 
 </script>
 

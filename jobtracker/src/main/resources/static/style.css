@@ -64,3 +64,13 @@ h1 {
 .delete-button {
     width: 180px;
 }
+
+/* Define the width for the twice-bigger-row class */
+    .twice-bigger-row {
+        width: 800px !important; /* Set your desired width */
+    }
+
+    /* Adjust the width of the columns accordingly */
+    .col-md-6 {
+        width: 100%;
+    }
