@@ -4,6 +4,7 @@ import chechi.io.jobtracker.converter.InterviewConverter;
 import chechi.io.jobtracker.dto.interview.InterviewRequest;
 import chechi.io.jobtracker.dto.interview.InterviewResponse;
 import chechi.io.jobtracker.entity.Interview;
+import chechi.io.jobtracker.exception.InterviewNotFoundException;
 import chechi.io.jobtracker.repository.InterviewRepository;
 import chechi.io.jobtracker.service.InterviewService;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class InterviewServiceImpl implements InterviewService {
 
     @Override
     public InterviewResponse findById(Integer id) {
-        Interview interview = interviewRepository.findById(id).orElseThrow();
+        Interview interview = interviewRepository.findById(id).orElseThrow(() -> new InterviewNotFoundException("Interview not found"));
         return interviewConverter.toResponse(interview);
     }
 
@@ -41,7 +42,7 @@ public class InterviewServiceImpl implements InterviewService {
 
     @Override
     public InterviewResponse updateInterview(Integer id, InterviewRequest request) {
-        Interview interview = interviewRepository.findById(id).orElseThrow();
+        Interview interview = interviewRepository.findById(id).orElseThrow(() -> new InterviewNotFoundException("Interview not found"));
 
         interview.setInterviewDate(request.getInterviewDate());
         interview.setLocation(request.getLocation());

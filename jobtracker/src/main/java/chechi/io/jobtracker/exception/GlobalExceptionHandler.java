@@ -14,4 +14,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlerJobApplicationNotFound (JobApplicationNotFound message) {
         return new ResponseEntity<>(message.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InterviewNotFoundException.class)
+    public ResponseEntity<String> handlerInterviewNotFound (InterviewNotFoundException message) {
+        return new ResponseEntity<>(message.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
