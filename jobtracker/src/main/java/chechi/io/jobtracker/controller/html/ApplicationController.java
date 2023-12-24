@@ -2,8 +2,10 @@ package chechi.io.jobtracker.controller.html;
 
 import chechi.io.jobtracker.dto.application.JobApplicationRequest;
 import chechi.io.jobtracker.dto.application.JobApplicationResponse;
+import chechi.io.jobtracker.dto.interview.InterviewResponse;
 import chechi.io.jobtracker.entity.JobApplication;
 import chechi.io.jobtracker.entity.StatusType;
+import chechi.io.jobtracker.service.InterviewService;
 import chechi.io.jobtracker.service.JobApplicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class ApplicationController {
 
     private final JobApplicationService jobApplicationService;
+    private final InterviewService interviewService;
 
     @GetMapping
     public String applications(Model model) {
@@ -65,6 +68,12 @@ public class ApplicationController {
         return jobApplicationService.findById(id);
     }
 
+    @GetMapping("/interview-details/{id}")
+    public InterviewResponse interviewDetailsModal (@PathVariable Integer id) {
+        return interviewService.findById(id);
+    }
+
+
     @PutMapping("/update/{id}")
     @ResponseBody
     public JobApplicationResponse updateJobApplication(@PathVariable Integer id, @ModelAttribute @Valid JobApplicationRequest request, Model model) {
@@ -92,4 +101,6 @@ public class ApplicationController {
         // Return appropriate response or data if needed
         return "redirect:/job-applications";
     }
+
+
 }

@@ -25,69 +25,89 @@
 </header>
 
 <main class="main-content">
-<!-- Status divs for pending, in review, rejected, accepted -->
-<div class="row mt-4">
-    <!-- Display job applications with different statuses -->
-    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4 class="title">Pending</h4>
+    <!-- Status divs for pending, in review, rejected, accepted -->
+    <div class="row mt-4">
+        <!-- Display job applications with different statuses -->
+        <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h4 class="title">Pending</h4>
 
-        <div th:each="job : ${pendingJobs}" class="job-details">
-            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
-                 data-toggle="modal"
-                 data-target="#jobApplicationModal">
-                <div class="job-details-content">
-                    <h5 th:text="${job.companyName}" class="company-name"></h5>
-                    <!-- You can add other job details here if needed -->
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4 class="title">In Review</h4>
-        <div th:each="job : ${inReviewJobs}" class="job-details">
-            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
-                 data-toggle="modal"
-                 data-target="#jobApplicationModal">
-                <div class="job-details-content d-flex justify-content-between align-items-center">
-                    <h5 th:text="${job.companyName}" class="company-name"></h5>
-                    <!-- Button aligned to the right -->
-                    <button class="btn btn-primary ml-auto open-interview-modal" onclick="openInterviewModal()">Interview</button>
+            <div th:each="job : ${pendingJobs}" class="job-details">
+                <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                     data-toggle="modal"
+                     data-target="#jobApplicationModal">
+                    <div class="job-details-content">
+                        <h5 th:text="${job.companyName}" class="company-name"></h5>
+                        <!-- You can add other job details here if needed -->
+                    </div>
                 </div>
             </div>
 
         </div>
-    </div>
 
-    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4 class="title">Rejected</h4>
-        <div th:each="job : ${rejectedJobs}" class="job-details">
-            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
-                 data-toggle="modal"
-                 data-target="#jobApplicationModal">
-                <div class="job-details-content">
-                    <h5 th:text="${job.companyName}" class="company-name"></h5>
-                    <!-- You can add other job details here if needed -->
+        <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h4 class="title">In Review</h4>
+            <div th:each="job : ${inReviewJobs}" class="job-details">
+                <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                     data-toggle="modal"
+                     data-target="#jobApplicationModal">
+                    <div class="job-details-content d-flex justify-content-between align-items-center">
+                        <h5 th:text="${job.companyName}" class="company-name"></h5>
+
+                        <!-- Conditional rendering for the "View" button -->
+                        <div class="ml-auto">
+                            <button th:if="${job.lastInterview != null}" class="btn btn-secondary ml-2 open-view-modal" th:onclick="'openViewModal(' + ${job.id} + ')'">View</button>
+
+
+                            <button class="btn btn-success ml-2 open-interview-modal" onclick="openInterviewModal()">Interview</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h4 class="title">Rejected</h4>
+            <div th:each="job : ${rejectedJobs}" class="job-details">
+                <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                     data-toggle="modal"
+                     data-target="#jobApplicationModal">
+                    <div class="job-details-content d-flex justify-content-between align-items-center">
+                        <h5 th:text="${job.companyName}" class="company-name"></h5>
+
+                        <!-- Conditional rendering for the "View" button -->
+                        <div class="ml-auto">
+                            <button th:if="${job.lastInterview != null}" class="btn btn-secondary ml-2 open-view-modal" th:onclick="'openViewModal(' + ${job.id} + ')'">View</button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h4 class="title">Accepted</h4>
+            <div th:each="job : ${acceptedJobs}" class="job-details">
+                <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
+                     data-toggle="modal"
+                     data-target="#jobApplicationModal">
+                    <div class="job-details-content d-flex justify-content-between align-items-center">
+                        <h5 th:text="${job.companyName}" class="company-name"></h5>
+
+                        <!-- Conditional rendering for the "View" button -->
+                        <div class="ml-auto">
+                            <button th:if="${job.lastInterview != null}" class="btn btn-secondary ml-2 open-view-modal" th:onclick="'openViewModal(' + ${job.id} + ')'">View</button>
+
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <h4 class="title">Accepted</h4>
-        <div th:each="job : ${acceptedJobs}" class="job-details">
-            <div class="job-details-card" th:onclick="'populateModal(' + ${job.id} + ')'"
-                 data-toggle="modal"
-                 data-target="#jobApplicationModal">
-                <div class="job-details-content">
-                    <h5 th:text="${job.companyName}" class="company-name"></h5>
-                    <!-- You can add other job details here if needed -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </main>
 
 <!-- Check if updatedJob exists in the model -->
@@ -165,11 +185,10 @@
                     </div>
 
                     <div class="form-group d-flex justify-content-between mt-3">
-                    <!-- Submit Button -->
+                        <!-- Submit Button -->
 
                         <button type="submit" class="btn btn-primary">Update Application</button>
-                        <!-- Inside your delete button -->
-                        <button type="button" class="btn btn-danger delete-button" th:onclick=confirmAndDeleteJob()>Delete</button>
+
 
 
                     </div>
@@ -181,12 +200,9 @@
                     </div>
                 </form>
             </div>
-
-
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refreshPage()">Close</button>
-
             </div>
         </div>
     </div>
@@ -197,7 +213,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="interviewModalLabel">Interview Details</h5>
+                <h5 class="modal-title" id="interviewModalLabel">Create Interview</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -236,17 +252,67 @@
                         <!-- Submit Button -->
                         <button id="submitInterviewButton" type="button" class="btn btn-primary" onclick="submitInterview()" >Submit Interview</button>
 
+                        <div class="form-group">
+                            <div class="alert alert-success" style="margin-top: 20px; display: none;">
+                                Interview is created successfully. Move to <a href="/job-applications">application list</a>.
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
-
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refreshPage()">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Modal for View Details -->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">Interview Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="viewInterviewForm">
+                    <div class="form-group">
+                        <label for="viewInterviewDate">Interview Date:</label>
+                        <input type="datetime-local" class="form-control" id="viewInterviewDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="viewInterviewLocation">Location:</label>
+                        <input type="text" class="form-control" id="viewInterviewLocation" >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="viewInterviewDetails">Details:</label>
+                        <textarea class="form-control" id="viewInterviewDetails" rows="3" ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="viewInterviewNotes">Notes:</label>
+                        <textarea class="form-control" id="viewInterviewNotes" rows="3" ></textarea>
+                    </div>
+
+                    <!-- Add an Update button -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <!-- Your existing JavaScript and other HTML code -->
@@ -304,6 +370,7 @@
 
             // Populate other fields similarly
 
+
             // Set the jobId as a data attribute in the form
             document.getElementById('jobApplicationForm').setAttribute('data-jobId', jobId);
 
@@ -353,6 +420,8 @@ document.getElementById('jobApplicationForm').addEventListener('submit', functio
         document.getElementById('notes').value = data.notes || '';
         document.getElementById('status').value = data.status || '';
         // ... Populate other fields similarly
+
+
 
         // Show success message
         const successMessage = document.getElementById('successMessage');
@@ -420,8 +489,11 @@ function submitInterview() {
         })
         .then(response => {
             if (response.ok) {
-                // Handle success (e.g., display a success message, update UI, etc.)
-                console.log('Interview submitted successfully');
+                console.log('Response OK');
+            const successMessage = document.querySelector('.alert.alert-success');
+            console.log(successMessage); // Check if it correctly identifies the element
+            successMessage.style.display = 'block';
+            console.log('Interview submitted successfully');
             } else {
                 // Handle errors or unsuccessful submission
                 console.error('Failed to submit interview');
@@ -439,11 +511,98 @@ $('.job-details-card').on('click', function(event) {
     if ($(event.target).hasClass('open-interview-modal')) {
         event.stopPropagation(); // Prevent the default behavior
         $('#interviewModal').modal('show'); // Open the interview modal
+    } else if ($(event.target).hasClass('open-view-modal')) {
+        event.stopPropagation(); // Prevent the default behavior
+        $('#viewModal').modal('show');
     } else {
         // Click was on the job details card, open the application modal
         $('#jobApplicationModal').modal('show');
     }
 });
+
+// Event handling for the "Interview" button
+$(document).on('click', '.open-interview-modal', function(event) {
+    event.stopPropagation();
+    const jobId = $(this).closest('.job-details-card').data('jobId'); // Get the job ID
+    openInterviewModal(jobId); // Call the function to open the interview modal
+});
+
+
+   function openInterviewModal(jobId) {
+    console.log('Fetching interview details for jobId:', jobId);
+
+    fetch('/job-applications/job-details/' + jobId)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fetched data:', data);
+
+            const interviewDetails = data.lastInterview;
+            console.log('Interview details:', interviewDetails);
+
+            if (interviewDetails) {
+                console.log('Populating modal with interview details:', interviewDetails);
+
+                // Populate the modal fields with fetched interview details
+                document.getElementById('interviewDate').value = interviewDetails.interviewDate || '';
+                document.getElementById('interviewLocation').value = interviewDetails.location || '';
+                document.getElementById('interviewDetails').value = interviewDetails.details || '';
+                document.getElementById('interviewNotes').value = interviewDetails.notes || '';
+
+                // Update the action attribute of the form with the interview ID
+                const interviewForm = document.getElementById('interviewForm');
+                interviewForm.action = '/interviews/' + interviewDetails.id; // Update with the actual endpoint
+
+                // Show the modal
+                $('#interviewModal').modal('show');
+            } else {
+                console.log('No interview details found.');
+                // Handle case when no interview details are available
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching interview details:', error);
+        });
+}
+
+
+function openViewModal(jobId) {
+    console.log('Fetching interview details for jobId:', jobId);
+
+    // Correct URL construction using template literals to include the jobId
+    fetch(`/job-applications/job-details/${jobId}`)
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched data:', data);
+
+            const interviewDetails = data.lastInterview;
+            console.log('Interview details:', interviewDetails);
+
+            if (interviewDetails) {
+                console.log('Populating modal with interview details:', interviewDetails);
+
+                // Populate modal fields with interview details
+
+                document.getElementById('viewInterviewDate').value = interviewDetails.interviewDate || '';
+                document.getElementById('viewInterviewLocation').value = interviewDetails.location || '';
+                document.getElementById('viewInterviewDetails').value = interviewDetails.details || '';
+                document.getElementById('viewInterviewNotes').value = interviewDetails.notes || '';
+
+                $('#viewModal').modal('show');
+            } else {
+                console.log('No interview details found.');
+                // Handle case when no interview details are available
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching interview details:', error);
+        });
+}
+
+
+
 
 </script>
 
